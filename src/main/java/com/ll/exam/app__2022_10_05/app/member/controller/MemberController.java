@@ -26,6 +26,11 @@ public class MemberController {
         return "안녕" + memberContext;
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<RsData> me(@AuthenticationPrincipal MemberContext memberContext) {
+        return Util.spring.responseEntityOf(RsData.of("S-1", "성공", memberContext));
+    }
+
     @PostMapping("/login")
     public ResponseEntity<RsData> login(@RequestBody LoginDto loginDto) {
         if (loginDto.isNotValid()) {

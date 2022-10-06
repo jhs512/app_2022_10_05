@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -195,7 +196,10 @@ class AuthTests {
 
         // Then
         resultActions
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.resultCode").value("S-1"))
+                .andExpect(jsonPath("$.msg").value("성공"))
+                .andExpect(jsonPath("$.data.username").value("user1"));
 
         // MemberController me 메서드에서는 @AuthenticationPrincipal MemberContext memberContext 를 사용해서 현재 로그인 한 회원의 정보를 얻어야 한다.
 
