@@ -3,10 +3,10 @@ package com.ll.exam.app__2022_10_05.app.article.controller;
 import com.ll.exam.app__2022_10_05.app.article.dto.request.ArticleModifyDto;
 import com.ll.exam.app__2022_10_05.app.article.service.ArticleService;
 import com.ll.exam.app__2022_10_05.app.base.dto.RsData;
-import com.ll.exam.app__2022_10_05.app.member.dto.request.LoginDto;
 import com.ll.exam.app__2022_10_05.app.member.entity.Article;
 import com.ll.exam.app__2022_10_05.app.security.entity.MemberContext;
 import com.ll.exam.app__2022_10_05.util.Util;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -57,7 +57,10 @@ public class ArticlesController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<RsData> delete(@PathVariable Long id, @AuthenticationPrincipal MemberContext memberContext) {
+    public ResponseEntity<RsData> delete(
+            @PathVariable Long id,
+            @Parameter(hidden = true) @AuthenticationPrincipal MemberContext memberContext
+    ) {
         Article article = articleService.findById(id).orElse(null);
 
         if (article == null) {
