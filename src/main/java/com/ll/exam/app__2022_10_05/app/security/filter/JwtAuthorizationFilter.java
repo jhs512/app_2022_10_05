@@ -1,6 +1,7 @@
 package com.ll.exam.app__2022_10_05.app.security.filter;
 
 import com.ll.exam.app__2022_10_05.app.member.entity.Member;
+import com.ll.exam.app__2022_10_05.app.member.service.MemberService;
 import com.ll.exam.app__2022_10_05.app.security.entity.MemberContext;
 import com.ll.exam.app__2022_10_05.app.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
+    private final MemberService memberService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -33,8 +35,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             if (jwtProvider.verify(token)) {
                 Map<String, Object> claims = jwtProvider.getClaims(token);
-
-                Member member = Member.fromJwtClaims(claims);
+                // 캐시(레디스)를 통해서
+                Member member = memberService.findByUsername((String) claims.get("username")).get();
                 forceAuthentication(member);
             }
         }
